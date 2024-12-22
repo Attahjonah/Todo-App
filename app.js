@@ -13,6 +13,8 @@ connectToMongoDB()
 
 app.use(express.json())
 
+app.use(express.urlencoded({ extended: true }));
+
 // Routes
 app.use('/auth', AuthRoutes);
 app.use('/tasks', TaskRoutes)

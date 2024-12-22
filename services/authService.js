@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const Login = async ({ email, password }) => {
-    const user = await UserModel.findOne({ email });
+    try {
+        const user = await UserModel.findOne({ email });
 
     if (!user) {
         return {
@@ -33,26 +34,43 @@ const Login = async ({ email, password }) => {
         data: { user, token },
         message: 'Login successful'
     }
+    } catch (error) {
+        return {
+            code: 500,
+            success: false,
+            data: null,
+            message: 'Server error'
+        }
+    }
+    
 }
 
 const Signup = async ({ username, password, email }) => {
-
-    const newUser = await UserModel.create({
-        username,
-        email,
-        password
-    })
-
-    const token = await jwt.sign({ email }, process.env.SECRET_KEY || 'super_secret');
-
-    return {
-        code: 201,
-        success: true,
-        data: {
-            user: newUser,
-            token,
+    try {
+        const newUser = await UserModel.create({
+            username,
+            email,
+            password
+        })
+    
+        const token = await jwt.sign({ email }, process.env.SECRET_KEY || 'super_secret');
+    
+        return {
+            code: 201,
+            success: true,
+            data: {
+                user: newUser,
+                token,
+            }
+        }
+    } catch (error) {
+        return {
+            code: 500,
+            success: false,
+            data: null
         }
     }
+    
 }
 
 module.exports = {

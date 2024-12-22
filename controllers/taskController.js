@@ -6,7 +6,7 @@ const CreateTask = async (req, res) => {
 
     const serviceResponse = await TaskService.CreateTask({
         text: payload.text, 
-        user
+        user,
     })
 
     return res.status(serviceResponse.code).json(serviceResponse);
@@ -17,14 +17,27 @@ const GetTask = async (req, res) => {
     const taskId = req.params.taskId
 
     const serviceResponse = await TaskService.GetTask({
-        taskId 
+        taskId, 
     })
 
     return res.status(serviceResponse.code).json(serviceResponse);
 }
 const GetAllTask = async (req, res) => {
 
-    const serviceResponse = await TaskService.GetAllTask();
+    const { sort } = req.query;
+    let filter = {}
+
+    if (sort === "completed") {
+        filter.status = "completed"
+    } else if ( sort === "deleted") {
+        filter.status = "deleted"
+    } else if ( sort === "all") {
+        filter = {}
+    } else {
+        filter.status = "pending"
+    }
+
+    const serviceResponse = await TaskService.GetAllTask(filter);
 
     return res.status(serviceResponse.code).json(serviceResponse);
 }
@@ -32,12 +45,13 @@ const GetAllTask = async (req, res) => {
 const UpdateTask = async (req, res) => {
     const taskId = req.params.taskId
     const user = req.user;
-    const text = req.body.text;
+    const { text, status } = req.body;
 
     const serviceResponse = await TaskService.UpdateTask({
         taskId,
         user,
         text,
+        status
     })
 
     return res.status(serviceResponse.code).json(serviceResponse);
@@ -48,7 +62,7 @@ const DeleteTask = async (req, res) => {
 
     const serviceResponse = await TaskService.DeleteTask({
         taskId,
-        user
+        user,
     })
 
     return res.status(serviceResponse.code).json(serviceResponse);

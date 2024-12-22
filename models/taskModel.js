@@ -1,16 +1,36 @@
+const { ref, required, string } = require('joi');
 const mongoose = require('mongoose');
 const shortid = require('shortid')
 
 
 
-const TaskSchema = new mongoose.Schema({
-    _id: {type: String, default: shortid.generate},
-    user_id: String,
-    text: String,
-    created_at: Date,
-    status: String,
-    update_at: Date,
-})
+const TaskSchema = new mongoose.Schema(
+  {
+    _id: {
+      type: String, 
+      default: shortid.generate
+    },
+
+    user_id: { 
+      type: String, 
+      required: true, 
+      ref: 'user'
+
+    },
+    text: { 
+      type: String, 
+      required: true 
+    },
+
+    status: {
+      type: String, 
+      required: true, 
+      default: "pending", 
+      enum: ['pending', 'completed', 'deleted']
+    },
+  },
+    { timestamps: true}
+)
 
 
 const TaskModel = mongoose.model('task', TaskSchema);

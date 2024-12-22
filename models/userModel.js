@@ -1,13 +1,14 @@
-const express = require('express')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { required } = require('joi');
 const mongoose = require('mongoose')
 const shortid = require('shortid')
 
 const UserSchema = new mongoose.Schema({
     _id: {type: String, default: shortid.generate},
     email: { unique: true, type: String },
-    password: String,
-    username: { unique: true, type: String },
+    password: { type: String, required: true},
+    username: { unique: true, type: String, required: true }
+    
 })
 
 UserSchema.pre(

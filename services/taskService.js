@@ -4,13 +4,14 @@ const CreateTask = async ({ text, user }) => {
     const task = await TaskModel.create({
         text,
         user_id: user._id,
-        created_at: new Date()
+        created_at: new Date(),
+        status: "pending"
     })
 
     return {
         code: 201,
         success: true,
-        status: Pending,
+        status: "pending",
         message: 'Task created successfully',
         data: {
             task,
@@ -18,7 +19,7 @@ const CreateTask = async ({ text, user }) => {
     }
 }
 const GetTask = async ({ taskId }) => {
-    const post = await TaskModel.findOne({ _id: taskId });
+    const task = await TaskModel.findOne({ _id: taskId });
 
     if (!task) {
         return {
@@ -53,7 +54,7 @@ const GetAllTask = async () => {
 }
 
 
-const UpdateTask = async ({ taskId, text}) => {
+const UpdateTask = async ({ taskId, text, status}) => {
     const task = await TaskModel.findOne({ _id: taskId });
 
     if (!task) {
@@ -68,13 +69,14 @@ const UpdateTask = async ({ taskId, text}) => {
 
     task.text = text || task.text
     task.update_at = new Date()
+    task.status = status
 
     await task.save()
 
     return {
         code: 200,
         success: true,
-        status: completed,
+        status: "completed",
         message: 'Task completed successfully',
         data: {
             task
@@ -100,7 +102,7 @@ const DeleteTask = async ({ user, taskId }) => {
     return {
         code: 200,
         success: true,
-        status: Deleted,
+        status: "Deleted",
         message: 'Task deleted successfully',
         data: null,
     }

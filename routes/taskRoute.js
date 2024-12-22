@@ -1,7 +1,7 @@
-const Route = require('express').Router
+const Router = require('express').Router
 const TaskController = require('../controllers/taskController')
 const AuthMiddleware = require('../authmiddleware')
-const { Router } = require('express')
+//const { Router } = require('express')
 
 const route = Router()
 route.post('/', AuthMiddleware.ValidateToken, TaskController.CreateTask)

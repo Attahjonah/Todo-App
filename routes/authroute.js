@@ -1,5 +1,6 @@
 const Router = require('express').Router
 const AuthController = require('../controllers/authController');
+const User = require('../models/userModel')
 
 const route = Router()
 
